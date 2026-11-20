@@ -1,5 +1,5 @@
-//Kanemoto
-//3.31.26
+//Abraham Gonzalez
+
 package game;
 
 import java.awt.EventQueue;
