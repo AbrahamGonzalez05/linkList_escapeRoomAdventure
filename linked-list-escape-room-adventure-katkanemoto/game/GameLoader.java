@@ -9,6 +9,12 @@ public class GameLoader {
         SceneLinkedList scenes = new SceneLinkedList();
 
         try {
+             System.out.println("Working Directory: "
+                    + System.getProperty("user.dir"));
+
+            System.out.println("Looking for file: "
+                    + new File(fileName).getAbsolutePath());
+
             Scanner fileScanner = new Scanner(new File(fileName));
 
             if (fileScanner.hasNextLine()) {

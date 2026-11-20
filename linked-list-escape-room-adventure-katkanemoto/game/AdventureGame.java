@@ -8,7 +8,7 @@ public class AdventureGame {
     private Scanner scanner;
 
     public AdventureGame() {
-        scenes = GameLoader.loadScenes("data/scenes.csv");
+        scenes = GameLoader.loadScenes("linked-list-escape-room-adventure-katkanemoto/data/scenes.csv");
         player = new Player();
         currentScene = scenes.findSceneById(1);
         scanner = new Scanner(System.in);
