@@ -32,6 +32,7 @@ public class GameGUI extends JFrame {
 	private JTextField userInventory;
 	private JButton btnPickUpItem;
 
+	private JLabel lblRoomTitle;
 	
 	public static void main(String[] args) {
         //game.play();
@@ -83,9 +84,18 @@ public class GameGUI extends JFrame {
 		lblImage.setIcon(scaledIcon);
 		lblImage.setBounds(145, 47, 300, 300);
 		contentPane.add(lblImage);
+
+		lblRoomTitle = new JLabel("");
+		lblRoomTitle.setFont(new Font("Fahkwang", Font.BOLD, 18));
+		lblRoomTitle.setBounds(170, 330, 285, 25);
+		contentPane.add(lblRoomTitle);
+
 		
 		sceneDescription = new JTextArea();
 		sceneDescription.setBounds(170, 363, 285, 37);
+		sceneDescription.setEditable(false);
+		sceneDescription.setLineWrap(true);
+		sceneDescription.setWrapStyleWord(true);
 		contentPane.add(sceneDescription);
 		
 		btnChoice1 = new JButton("New button");
@@ -94,6 +104,9 @@ public class GameGUI extends JFrame {
 				int nextId = currentScence.getChoices().get(0).getNextSceneId();
 				currentScence = game.getScences().findSceneById(nextId);
 	            
+				game.moveToScene(nextId);
+				currentScence = game.getCurrentScene();
+
 	            updateSceneDisplay();
 	            
 	            if (currentScence.getSceneId() == 5) {
@@ -111,6 +124,9 @@ public class GameGUI extends JFrame {
 				int nextId = currentScence.getChoices().get(1).getNextSceneId();
 				currentScence = game.getScences().findSceneById(nextId);
 	            
+				game.moveToScene(nextId);
+				currentScence = game.getCurrentScene();
+
 	            updateSceneDisplay();
 	            
 	            if (currentScence.getSceneId() == 5) {
@@ -139,13 +155,11 @@ public class GameGUI extends JFrame {
 		btnPickUpItem = new JButton("Pick up Item");
 		btnPickUpItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Item itemInRoom = currentScence.getItem();
-				
-				if (itemInRoom != null) {
-					game.getPlayer().addItem(itemInRoom);
-					currentScence.removeItem();
-					updateSceneDisplay();
-				}
+				game.pickupCurrentItem();
+
+				currentScence = game.getCurrentScene();
+
+				updateSceneDisplay();
 			}
 		});
 		btnPickUpItem.setBounds(37, 421, 117, 29);
