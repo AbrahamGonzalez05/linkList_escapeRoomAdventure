@@ -73,11 +73,9 @@ public class GameGUI extends JFrame {
 		contentPane.add(lblTitle);
 		
 		lblImage = new JLabel("");
-		//lblImage.setIcon(new ImageIcon(GameGUI.class.getResource("/images2/lobby.png")));
-		
-	    ImageIcon icon = new ImageIcon(GameGUI.class.getResource("/images2/lobby.png"));
+		ImageIcon icon = new ImageIcon("images2/lobby.png");
 		Image img = icon.getImage();
-
+		
 		Image scaledImg = img.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
 		ImageIcon scaledIcon = new ImageIcon(scaledImg);
 
@@ -101,9 +99,7 @@ public class GameGUI extends JFrame {
 		btnChoice1 = new JButton("New button");
 		btnChoice1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int nextId = currentScence.getChoices().get(0).getNextSceneId();
-				currentScence = game.getScences().findSceneById(nextId);
-	            
+				int nextId = currentScence.getChoices().get(0).getNextSceneId();	            
 				game.moveToScene(nextId);
 				currentScence = game.getCurrentScene();
 
@@ -122,7 +118,6 @@ public class GameGUI extends JFrame {
 		btnChoice2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int nextId = currentScence.getChoices().get(1).getNextSceneId();
-				currentScence = game.getScences().findSceneById(nextId);
 	            
 				game.moveToScene(nextId);
 				currentScence = game.getCurrentScene();
@@ -169,15 +164,10 @@ public class GameGUI extends JFrame {
 	}
 	
 	public void checkWinCondition() {
-		boolean hasKeycard = game.getPlayer().hasItem("Keycard");
-		boolean hasCodeNote = game.getPlayer().hasItem("Code Note");
-
-		if (hasKeycard && hasCodeNote) {
-			javax.swing.JOptionPane.showMessageDialog(this,
-					"You used the Keycard and the Code Note to unlock the exit.\nYou escaped. You win!");
+		if (game.canWinGame()){
+			javax.swing.JOptionPane.showMessageDialog(this, "You used the Keycard " + "and the Code Note " + "to unlock the exit.\n" + "you escaped. \n" + "You WIN!");
 		} else {
-			javax.swing.JOptionPane.showMessageDialog(this,
-					"The exit will not open.\nYou are missing the required items.\nYou need the Keycard and the Code Note.");
+			javax.swing.JOptionPane.showMessageDialog(this, "The exit is Locked. \n" + " You need Both:\n" + "Keycard\n" + "code Note");
 		}
 
 		btnChoice1.setEnabled(false);
@@ -187,26 +177,79 @@ public class GameGUI extends JFrame {
 	}
 
 	public void updateSceneDisplay() {
-	    //Scene scene = game.getCurrentScene();
 
-	    //lblTitle.setText(scene.getTitle());
-	    sceneDescription.setText(currentScence.getDescription());
-	    System.out.println(currentScence);
-	    Item itemInRoom = currentScence.getItem();
-	    if(itemInRoom == null)
-	    	txtItemsRoom.setText("nothing in here");
-	    else
-	    	txtItemsRoom.setText(currentScence.getItem().toString());
-	    
-	    userInventory.setText(game.getPlayer().getInventoryText());
+        lblRoomTitle.setText(
+                currentScence.getTitle());
 
-	    ImageIcon icon = new ImageIcon(currentScence.getImagePath());
-	    Image img = icon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
-	    lblImage.setIcon(new ImageIcon(img));
+        sceneDescription.setText(
+                currentScence.getDescription());
 
-	    btnChoice1.setText("<html>" + currentScence.getChoices().get(0).getText() + "</html>");
-	    btnChoice2.setText("<html>" + currentScence.getChoices().get(1).getText() + "</html>");
+        Item itemInRoom =
+                currentScence.getItem();
 
-	    //btnPickup.setVisible(scene.getItem() != null);
-	}
+        if (itemInRoom == null) {
+
+            txtItemsRoom.setText(
+                    "No items in this room.");
+
+            btnPickUpItem.setEnabled(false);
+
+        } else {
+
+            txtItemsRoom.setText(
+                    "Item Found:\n"
+                    + itemInRoom.getName());
+
+            btnPickUpItem.setEnabled(true);
+        }
+
+        userInventory.setText(
+                game.getPlayer()
+                    .getInventoryText());
+
+		String path = currentScence.getImagePath();
+
+		ImageIcon icon = new ImageIcon(path);
+
+		if (icon.getIconWidth() != -1) {
+
+    	Image img = icon.getImage().getScaledInstance(300,300,Image.SCALE_SMOOTH);
+
+    	lblImage.setIcon(new ImageIcon(img));
+}
+
+        if (currentScence.getChoices().size() > 0) {
+
+            btnChoice1.setVisible(true);
+
+            btnChoice1.setText(
+                "<html>"
+                + currentScence
+                    .getChoices()
+                    .get(0)
+                    .getText()
+                + "</html>");
+
+        } else {
+
+            btnChoice1.setVisible(false);
+        }
+
+        if (currentScence.getChoices().size() > 1) {
+
+            btnChoice2.setVisible(true);
+
+            btnChoice2.setText(
+                "<html>"
+                + currentScence
+                    .getChoices()
+                    .get(1)
+                    .getText()
+                + "</html>");
+
+        } else {
+
+            btnChoice2.setVisible(false);
+        }
+    }
 }
